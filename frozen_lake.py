@@ -166,9 +166,13 @@ class FrozenLakeEnv(Env):
         self,
         render_mode: Optional[str] = None,
         desc=None,
+        ### desc인자가 None인 것은, 원래 있는 MAP을 사용하겠다는 것.
+        ### 특정한 이름이 들어가 있다면 그에 맞는 맵을 만든다는 뜻임!
         map_name="4x4",
         is_slippery=True,
-    ):
+        ### 빙판을 표현하기 위한 변수로, 원래 이동하려고 하는 state로의 이동시 transition probability가 발생하여 각 state로의 이동이
+        ### 확률적으로 나타나게 되어 이동에 제약이 걸리게 되는 것이다.(즉, 아래로 이동하려고 해도 다른 방향으로의 이동가능성 존재.)
+
         if desc is None and map_name is None:
             desc = generate_random_map()
         elif desc is None:
@@ -177,8 +181,8 @@ class FrozenLakeEnv(Env):
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.reward_range = (0, 1)
 
-        nA = 4
-        nS = nrow * ncol
+        nA = 4  ### 가능한 Action의 개
+        nS = nrow * ncol ### 가능한 state의 개
 
         self.initial_state_distrib = np.array(desc == b"S").astype("float64").ravel()
         self.initial_state_distrib /= self.initial_state_distrib.sum()
